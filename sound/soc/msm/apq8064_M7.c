@@ -1205,9 +1205,9 @@ static int msm_btsco_rate_put(struct snd_kcontrol *kcontrol,
 	case 1:
 		msm_btsco_rate = BTSCO_RATE_16KHZ;
 		break;
-+	case 2:
-+		msm_btsco_rate = BTSCO_RATE_48KHZ;
-+		break;
+	case 2:
+		msm_btsco_rate = BTSCO_RATE_48KHZ;
+		break;
 	default:
 		msm_btsco_rate = BTSCO_RATE_8KHZ;
 		break;
