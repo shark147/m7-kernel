@@ -557,7 +557,7 @@ config TCP_CONG_YEAH
 config TCP_CONG_ILLINOIS
 	tristate "TCP Illinois"
 	depends on EXPERIMENTAL
-	default n
+	default y
 	---help---
 	TCP-Illinois is a sender-side modification of TCP Reno for
 	high speed long delay links. It uses round-trip-time to
@@ -569,7 +569,7 @@ config TCP_CONG_ILLINOIS
 
 choice
 	prompt "Default TCP congestion control"
-	default DEFAULT_CUBIC
+	default DEFAULT_WESTWOOD
 	help
 	  Select the TCP congestion control that will be used by default
 	  for all connections.
@@ -595,6 +595,9 @@ choice
 	config DEFAULT_WESTWOOD
 		bool "Westwood" if TCP_CONG_WESTWOOD=y
 
+	config DEFAULT_ILLINOIS
+		bool "Illinois" if TCP_CONG_ILLINOIS=y
+
 	config DEFAULT_RENO
 		bool "Reno"
 
@@ -617,6 +620,7 @@ config DEFAULT_TCP_CONG
 	default "westwood" if DEFAULT_WESTWOOD
 	default "veno" if DEFAULT_VENO
 	default "reno" if DEFAULT_RENO
+	default "illinois" if DEFAULT_ILLINOIS
 	default "cubic"
 
 config TCP_MD5SIG
