@@ -53,7 +53,7 @@ config MMC_BLOCK_BOUNCE
 config MMC_BLOCK_DEFERRED_RESUME
 	bool "Deferr MMC layer resume until I/O is requested"
 	depends on MMC_BLOCK
-	default n
+	default y
 	help
 	  Say Y here to enable deferred MMC resume until I/O
 	  is requested. This will reduce overall resume latency and
