@@ -3623,7 +3623,10 @@ static const char stat_nam[] = TASK_STATE_TO_CHAR_STR;
 
 void sched_show_task(struct task_struct *p)
 {
+
+#ifdef CONFIG_DEBUG_KERNEL
 	unsigned long free = 0;
+#endif
 	unsigned state;
 
 	state = p->state ? __ffs(p->state) + 1 : 0;
@@ -3643,15 +3646,16 @@ void sched_show_task(struct task_struct *p)
 #ifdef CONFIG_DEBUG_STACK_USAGE
 	free = stack_not_used(p);
 #endif
+#ifdef CONFIG_DEBUG_KERNEL
 	printk(KERN_CONT "%5lu %5d %6d 0x%08lx c%d %llu\n", free,
 		task_pid_nr(p), task_pid_nr(rcu_dereference(p->real_parent)),
 		(unsigned long)task_thread_info(p)->flags, p->on_cpu,
-#if defined(CONFIG_SCHEDSTATS) || defined(CONFIG_TASK_DELAY_ACCT)
-		div64_u64(task_rq(p)->clock - p->sched_info.last_arrival, NSEC_PER_MSEC));
-#else
-		(unsigned long long)0);
+	#if defined(CONFIG_SCHEDSTATS) || defined(CONFIG_TASK_DELAY_ACCT)
+			div64_u64(task_rq(p)->clock - p->sched_info.last_arrival, NSEC_PER_MSEC));
+	#else
+			(unsigned long long)0);
+	#endif
 #endif
-
 #if defined(CONFIG_DEBUG_MUTEXES)
 	if (state == TASK_UNINTERRUPTIBLE)
 		if (p->blocked_by)
