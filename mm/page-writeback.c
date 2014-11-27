@@ -35,6 +35,7 @@
 #include <linux/buffer_head.h> 
 #include <linux/pagevec.h>
 #include <trace/events/writeback.h>
+#include <linux/earlysuspend.h>
 
 #define MAX_PAUSE		max(HZ/5, 1)
 
@@ -43,6 +44,8 @@
 #define BANDWIDTH_INTERVAL	max(HZ/5, 1)
 
 #define RATELIMIT_CALC_SHIFT	10
+
+bool resume = true;
 
 static long ratelimit_pages = 32;
 
@@ -57,7 +60,7 @@ int vm_dirty_ratio = 20;
 
 unsigned long vm_dirty_bytes;
 
-unsigned int dirty_writeback_interval = 5 * 100; 
+unsigned int dirty_writeback_interval = 0;
 
 EXPORT_SYMBOL_GPL(dirty_writeback_interval);
 
@@ -963,9 +966,25 @@ static struct notifier_block __cpuinitdata ratelimit_nb = {
 	.next		= NULL,
 };
 
+static void dirty_early_suspend(struct early_suspend *handler)
+{
+	dirty_writeback_interval = 5 * 100;
+}
+
+static void dirty_late_resume(struct early_suspend *handler)
+{
+	dirty_writeback_interval = 0;
+}
+
+static struct early_suspend dirty_suspend = {
+	.suspend = dirty_early_suspend,
+	.resume = dirty_late_resume,
+};
+
 void __init page_writeback_init(void)
 {
 	int shift;
+	register_early_suspend(&dirty_suspend);
 
 	writeback_set_ratelimit();
 	register_cpu_notifier(&ratelimit_nb);
