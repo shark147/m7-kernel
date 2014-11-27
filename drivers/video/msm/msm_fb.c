@@ -100,9 +100,9 @@ static u32 msm_fb_pseudo_palette[16] = {
 static struct ion_client *iclient;
 
 u32 msm_fb_debug_enabled;
-u32 msm_fb_msg_level = 7;
+u32 msm_fb_msg_level = 0;
 
-u32 mddi_msg_level = 5;
+u32 mddi_msg_level = 0;
 
 extern int32 mdp_block_power_cnt[MDP_MAX_BLOCK];
 extern unsigned long mdp_timer_duration;
